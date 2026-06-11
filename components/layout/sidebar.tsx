@@ -66,10 +66,13 @@ export function Sidebar() {
             exit={{ opacity: 0 }}
             className="flex items-center gap-2"
           >
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">T</span>
+            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+              <svg viewBox="0 0 128 128" className="h-5 w-5 text-white">
+                <path d="M48 36h32v6H70v50h-6V42H48z" fill="currentColor" transform="translate(0,2)"/>
+                <path d="M50 72l8 8 20-20" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" transform="translate(0,2)"/>
+              </svg>
             </div>
-            <span className="font-semibold text-sm">Todo App</span>
+            <span className="font-semibold text-sm bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Taskora</span>
           </motion.div>
         )}
         <button

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#6366f1" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#g)" filter="url(#shadow)"/>
+  <!-- Inner circle accent -->
+  <circle cx="64" cy="64" r="48" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- T letter -->
+  <path d="M48 36h32v6H70v50h-6V42H48z" fill="white" transform="translate(0,2)"/>
+  <!-- Checkmark -->
+  <path d="M50 72l8 8 20-20" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,2)"/>
+</svg>

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useFolderStore } from "@/store/folder-store";
 import { useUIStore } from "@/store/ui-store";
+import { Palette } from "lucide-react";
 
 interface FolderModalProps {
   open: boolean;
@@ -54,7 +55,7 @@ export function FolderModal({ open, onOpenChange, editFolder }: FolderModalProps
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title={editFolder ? "Edit Folder" : "Create Folder"}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="folder-name">Name</Label>
           <Input id="folder-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Folder name" required />
@@ -72,7 +73,7 @@ export function FolderModal({ open, onOpenChange, editFolder }: FolderModalProps
                 type="button"
                 onClick={() => setIcon(ic)}
                 className={`h-9 w-9 rounded-lg flex items-center justify-center text-lg transition-all ${
-                  icon === ic ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-accent/50"
+                  icon === ic ? "bg-primary/20 ring-2 ring-primary scale-110" : "hover:bg-accent/50 hover:scale-105"
                 }`}
               >
                 {ic}
@@ -83,11 +84,19 @@ export function FolderModal({ open, onOpenChange, editFolder }: FolderModalProps
         <div className="space-y-2">
           <Label>Color</Label>
           <div className="flex items-center gap-3">
-            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-10 w-16 rounded-lg border border-border cursor-pointer" />
-            <span className="text-xs text-muted-foreground">{color}</span>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="h-10 w-16 rounded-lg border border-border cursor-pointer bg-transparent p-0.5"
+            />
+            <div className="h-8 w-8 rounded-lg border border-border/50 flex items-center justify-center" style={{ backgroundColor: color + "20" }}>
+              <Palette className="h-4 w-4" style={{ color }} />
+            </div>
+            <span className="text-xs text-muted-foreground font-mono">{color}</span>
           </div>
         </div>
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-end gap-2 pt-3 border-t border-border/30">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button type="submit">{editFolder ? "Save" : "Create"}</Button>
         </div>

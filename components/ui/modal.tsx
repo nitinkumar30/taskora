@@ -33,7 +33,7 @@ export function Modal({ open, onOpenChange, title, description, children, classN
             <Dialog.Content asChild>
               <motion.div
                 className={cn(
-                  "fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-border/50 bg-card/95 backdrop-blur-xl p-6 shadow-2xl",
+                  "fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-border/50 bg-card/95 backdrop-blur-xl shadow-2xl flex flex-col max-h-[85vh]",
                   className
                 )}
                 initial={{ opacity: 0, scale: 0.95, y: -20 }}
@@ -41,9 +41,9 @@ export function Modal({ open, onOpenChange, title, description, children, classN
                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <Dialog.Title className="text-lg font-semibold">{title}</Dialog.Title>
+                <div className="flex items-center justify-between p-6 pb-4 border-b border-border/30 shrink-0">
+                  <div className="min-w-0">
+                    <Dialog.Title className="text-lg font-semibold truncate">{title}</Dialog.Title>
                     {description && (
                       <Dialog.Description className="text-sm text-muted-foreground mt-1">
                         {description}
@@ -51,12 +51,14 @@ export function Modal({ open, onOpenChange, title, description, children, classN
                     )}
                   </div>
                   <Dialog.Close asChild>
-                    <button className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-accent transition-colors">
+                    <button className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-accent transition-colors shrink-0 ml-4">
                       <X className="h-4 w-4" />
                     </button>
                   </Dialog.Close>
                 </div>
-                {children}
+                <div className="overflow-y-auto p-6 pt-4 flex-1">
+                  {children}
+                </div>
               </motion.div>
             </Dialog.Content>
           </Dialog.Portal>

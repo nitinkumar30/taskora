@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="50%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="text" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a5b4fc"/>
+      <stop offset="100%" stop-color="#f9a8d4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#6366f1" opacity="0.05"/>
+  <circle cx="1100" cy="500" r="250" fill="#ec4899" opacity="0.05"/>
+  <circle cx="600" cy="315" r="300" fill="#8b5cf6" opacity="0.03"/>
+  <!-- Grid pattern -->
+  <g opacity="0.03" stroke="white" stroke-width="0.5">
+    <line x1="0" y1="0" x2="1200" y2="0"/><line x1="0" y1="50" x2="1200" y2="50"/>
+    <line x1="0" y1="100" x2="1200" y2="100"/><line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/><line x1="0" y1="250" x2="1200" y2="250"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="350" x2="1200" y2="350"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/><line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/><line x1="0" y1="550" x2="1200" y2="550"/>
+    <line x1="0" y1="600" x2="1200" y2="600"/>
+  </g>
+  <!-- Logo icon -->
+  <g transform="translate(100, 315) scale(2)" filter="url(#glow)">
+    <circle cx="64" cy="64" r="60" fill="url(#accent)"/>
+    <path d="M48 36h32v6H70v50h-6V42H48z" fill="white" transform="translate(0,2)"/>
+    <path d="M50 72l8 8 20-20" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,2)"/>
+  </g>
+  <!-- Title -->
+  <text x="280" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" fill="url(#text)" letter-spacing="-2">Taskora</text>
+  <!-- Tagline -->
+  <text x="280" y="370" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="rgba(255,255,255,0.5)" font-weight="400" letter-spacing="-0.5">Premium Task Management</text>
+  <!-- Feature pills -->
+  <rect x="280" y="400" width="120" height="36" rx="18" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="1"/>
+  <text x="340" y="424" font-family="system-ui, sans-serif" font-size="15" fill="#818cf8" text-anchor="middle" font-weight="500">Kanban</text>
+  <rect x="412" y="400" width="100" height="36" rx="18" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+  <text x="462" y="424" font-family="system-ui, sans-serif" font-size="15" fill="#a78bfa" text-anchor="middle" font-weight="500">Calendar</text>
+  <rect x="524" y="400" width="110" height="36" rx="18" fill="rgba(236,72,153,0.15)" stroke="rgba(236,72,153,0.3)" stroke-width="1"/>
+  <text x="579" y="424" font-family="system-ui, sans-serif" font-size="15" fill="#f9a8d4" text-anchor="middle" font-weight="500">Analytics</text>
+  <rect x="646" y="400" width="120" height="36" rx="18" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+  <text x="706" y="424" font-family="system-ui, sans-serif" font-size="15" fill="#34d399" text-anchor="middle" font-weight="500">Projects</text>
+  <!-- Footer -->
+  <text x="600" y="570" font-family="system-ui, sans-serif" font-size="16" fill="rgba(255,255,255,0.2)" text-anchor="middle">taskora.app</text>
+</svg>

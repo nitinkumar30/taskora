@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⏳ **CHRONOS** — *Premium Task Management*
+# ⏳ **TASKORA** — *Premium Task Management*
 
 > *"Finally, a to-do app that respects your time almost as much as your procrastination does."*
 
@@ -11,10 +11,11 @@
 [![Three.js](https://img.shields.io/badge/Three.js-r170-000000?style=for-the-badge&logo=three.js)](https://threejs.org/)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/)
 [![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/nitinkumar/chronos/pulls)
-[![Code Style](https://img.shields.io/badge/Code_Style-Prettier-FF69B4?style=for-the-badge)](https://prettier.io/)
-[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)](https://github.com/nitinkumar/chronos/actions)
-[![Maintained](https://img.shields.io/badge/Maintained-Yes%20(Somehow)-blue?style=for-the-badge)](https://github.com/nitinkumar/chronos)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/nitinkumar30/taskora/pulls)
+
+[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)](https://github.com/nitinkumar30/taskora/actions)
+
+[![Maintained](https://img.shields.io/badge/Maintained-Yes%20(Somehow)-blue?style=for-the-badge)](https://github.com/nitinkumar30/taskora)
 
 <br>
 
@@ -30,9 +31,9 @@
 
 ## ✨ **The Elevator Pitch** *(Because You're Busy)*
 
-**Chronos** is not your grandmother's TODO app. It's a **premium, production-grade, SaaS-looking, over-engineered (in a good way)** task management platform that makes you *feel* productive even when you're just rearranging tasks between folders.
+**Taskora** is not your grandmother's TODO app. It's a **premium, production-grade, SaaS-looking, over-engineered (in a good way)** task management platform that makes you *feel* productive even when you're just rearranging tasks between folders.
 
-Built with **Next.js 15**, **TypeScript**, and enough animation libraries to make your GPU sweat, Chronos delivers:
+Built with **Next.js 15**, **TypeScript**, and enough animation libraries to make your GPU sweat, Taskora delivers:
 
 - ✅ A **Dashboard** that lies about your productivity with beautiful charts
 - ✅ A **Kanban Board** you can drag things around on (very satisfying)
@@ -166,8 +167,8 @@ Every task, folder, and project is stored in local JSON files via API routes. No
 
 ```bash
 # Clone the repository (you know the drill)
-git clone https://github.com/nitinkumar/chronos.git
-cd chronos
+git clone https://github.com/nitinkumar30/taskora.git
+cd taskora
 
 # Install dependencies (go grab a coffee ☕)
 npm install
@@ -189,7 +190,7 @@ Open [http://localhost:3000](http://localhost:3000) and behold your new producti
 ## 📁 **Project Structure** *(For the OCD Among Us)*
 
 ```
-chronos/
+taskora/
 ├── 📂 AI_data/              # Behind-the-scenes AI generation tea ☕
 ├── 📂 app/                  # Next.js App Router (the brain)
 │   ├── 📂 api/              # REST API routes (the nervous system)
@@ -278,8 +279,8 @@ We welcome all contributions — from typo fixes to full feature implementations
 
 **Nitin Kumar** — *The Mastermind, The Visionary, The One Who Wrote the Prompt*
 
-- GitHub: [@nitinkumar](https://github.com/nitinkumar)
-- Project: **Chronos** — Premium Task Management
+- GitHub: [@nitinkumar30](https://github.com/nitinkumar30)
+- Project: **Taskora** — Premium Task Management
 
 ---
 
@@ -307,7 +308,7 @@ For full details on the AI generation process, prompt used, and architectural de
 
 <br>
 
-[![Star](https://img.shields.io/badge/⭐%20Star%20this%20repo-Please%3F-yellow?style=for-the-badge)](https://github.com/nitinkumar/chronos)
+[![Star](https://img.shields.io/badge/⭐%20Star%20this%20repo-Please%3F-yellow?style=for-the-badge)](https://github.com/nitinkumar30/taskora)
 [![Follow](https://img.shields.io/badge/Follow%20%40nitinkumar-1DA1F2?style=for-the-badge&logo=github)](https://github.com/nitinkumar)
 
 </div>

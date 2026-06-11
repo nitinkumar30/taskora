@@ -42,7 +42,7 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const title = pageTitles[pathname] || "Todo App";
+  const title = pageTitles[pathname] || "Taskora";
   const isHome = pathname === "/";
 
   return (

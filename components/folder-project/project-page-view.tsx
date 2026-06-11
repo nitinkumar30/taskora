@@ -100,7 +100,7 @@ export function ProjectPageView() {
 
       <TaskList tasks={projectTasks} />
 
-      <ProjectModal open={editModalOpen} onOpenChange={setEditModalOpen} editProject={project} />
+      <ProjectModal open={editModalOpen} onOpenChange={setEditModalOpen} editProject={{ ...project, startDate: project.startDate || "", dueDate: project.dueDate || "" }} />
     </div>
   );
 }

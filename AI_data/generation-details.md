@@ -9,7 +9,7 @@
 | Field | Value |
 |-------|-------|
 | **Author** | [Nitin Kumar](https://github.com/nitinkumar) |
-| **Project** | Chronos — Premium Task Management |
+| **Project** | Taskora — Premium Task Management |
 | **Date Generated** | June 12, 2026 |
 | **Total Generation Time** | ~8 minutes |
 | **Total Files Generated** | 80+ |
@@ -99,4 +99,4 @@ This project is MIT licensed. Do whatever you want with it. Just don't blame us 
 
 ---
 
-*Generated with ❤️ (and a lot of tokens) by Nitin Kumar + DeepSeek V4 Flash via OpenCode CLI*
+*Generated with ❤️ (and a lot of tokens) by [Nitin Kumar](https://github.com/nitinkumar30) + DeepSeek V4 Flash via OpenCode CLI*

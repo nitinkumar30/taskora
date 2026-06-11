@@ -3,15 +3,17 @@
 import * as React from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/ui/date-input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "@/store/project-store";
 import { useUIStore } from "@/store/ui-store";
+import { Palette } from "lucide-react";
 
 interface ProjectModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  editProject?: { id: string; name: string; description: string; color: string; icon: string; startDate: string | null; dueDate: string | null } | null;
+  editProject?: { id: string; name: string; description: string; color: string; icon: string; startDate: string; dueDate: string } | null;
 }
 
 const projectIcons = ["🚀", "📱", "🌐", "🎯", "🎨", "📊", "⚡", "🛠️", "🎮", "📝", "🏗️", "💡", "🔬", "📈", "🤖"];
@@ -60,7 +62,7 @@ export function ProjectModal({ open, onOpenChange, editProject }: ProjectModalPr
 
   return (
     <Modal open={open} onOpenChange={onOpenChange} title={editProject ? "Edit Project" : "Create Project"}>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="project-name">Name</Label>
           <Input id="project-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Project name" required />
@@ -72,11 +74,11 @@ export function ProjectModal({ open, onOpenChange, editProject }: ProjectModalPr
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="project-start">Start Date</Label>
-            <Input id="project-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <DateInput id="project-start" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="project-due">Due Date</Label>
-            <Input id="project-due" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            <DateInput id="project-due" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
         </div>
         <div className="space-y-2">
@@ -88,7 +90,7 @@ export function ProjectModal({ open, onOpenChange, editProject }: ProjectModalPr
                 type="button"
                 onClick={() => setIcon(ic)}
                 className={`h-9 w-9 rounded-lg flex items-center justify-center text-lg transition-all ${
-                  icon === ic ? "bg-primary/20 ring-2 ring-primary" : "hover:bg-accent/50"
+                  icon === ic ? "bg-primary/20 ring-2 ring-primary scale-110" : "hover:bg-accent/50 hover:scale-105"
                 }`}
               >
                 {ic}
@@ -99,11 +101,19 @@ export function ProjectModal({ open, onOpenChange, editProject }: ProjectModalPr
         <div className="space-y-2">
           <Label>Color</Label>
           <div className="flex items-center gap-3">
-            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-10 w-16 rounded-lg border border-border cursor-pointer" />
-            <span className="text-xs text-muted-foreground">{color}</span>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="h-10 w-16 rounded-lg border border-border cursor-pointer bg-transparent p-0.5"
+            />
+            <div className="h-8 w-8 rounded-lg border border-border/50 flex items-center justify-center" style={{ backgroundColor: color + "20" }}>
+              <Palette className="h-4 w-4" style={{ color }} />
+            </div>
+            <span className="text-xs text-muted-foreground font-mono">{color}</span>
           </div>
         </div>
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="flex justify-end gap-2 pt-3 border-t border-border/30">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button type="submit">{editProject ? "Save" : "Create"}</Button>
         </div>
