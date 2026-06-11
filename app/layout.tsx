@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://taskora.vercel.app"),
+  metadataBase: new URL("https://taskora-mgr.vercel.app"),
   title: {
     default: "Taskora — Premium Task Management",
     template: "%s | Taskora",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://taskora.vercel.app",
+    url: "https://taskora-mgr.vercel.app",
     siteName: "Taskora",
     title: "Taskora — Premium Task Management",
     description: "A beautiful, premium-quality animated task management application with Kanban, calendar, timeline, and analytics.",

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const baseMetadata: Metadata = {
-  metadataBase: new URL("https://taskora.vercel.app"),
+  metadataBase: new URL("https://taskora-mgr.vercel.app"),
   title: {
     default: "Taskora — Premium Task Management",
     template: "%s | Taskora",
@@ -26,7 +26,7 @@ export const baseMetadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://taskora.vercel.app",
+    url: "https://taskora-mgr.vercel.app",
     siteName: "Taskora",
     title: "Taskora — Premium Task Management",
     description:
