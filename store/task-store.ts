@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Task, TaskStatus, TaskPriority, FilterOptions, SortField } from "@/types";
 import { calculateDuration } from "@/utils/duration";
 import { generateId } from "@/lib/utils";
+import { readTasks, writeTasks } from "@/utils/local-storage";
 
 interface TaskState {
   tasks: Task[];
@@ -51,8 +52,20 @@ const defaultFilters: FilterOptions = {
 
 const BASE = "/api";
 
+async function syncToAPI(endpoint: string, method: string, body?: any): Promise<void> {
+  try {
+    await fetch(`${BASE}${endpoint}`, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    // API sync is best-effort; localStorage is the source of truth
+  }
+}
+
 export const useTaskStore = create<TaskState>((set, get) => ({
-  tasks: [],
+  tasks: readTasks(),
   filteredTasks: [],
   viewType: "list",
   filters: defaultFilters,
@@ -61,10 +74,23 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 
   loadTasks: async () => {
     set({ isLoading: true });
+    const local = readTasks();
+    if (local.length > 0) {
+      set({ tasks: local, isLoading: false });
+      get().applyFilters();
+    }
     try {
       const res = await fetch(`${BASE}/tasks`);
-      const tasks = await res.json();
-      set({ tasks, isLoading: false });
+      const server = await res.json();
+      if (server.length > 0) {
+        writeTasks(server);
+        set({ tasks: server, isLoading: false });
+      } else if (local.length > 0) {
+        syncToAPI("/tasks/bulk", "PATCH", { ids: local.map((t: Task) => t.id), updates: {} });
+        for (const t of local) {
+          syncToAPI("/tasks", "POST", t);
+        }
+      }
       get().applyFilters();
     } catch {
       set({ isLoading: false });
@@ -82,74 +108,87 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       createdAt: now,
       updatedAt: now,
     };
-    const res = await fetch(`${BASE}/tasks`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newTask),
-    });
-    const tasks = await res.json();
+    const tasks = [...get().tasks, newTask];
+    writeTasks(tasks);
     set({ tasks });
     get().applyFilters();
+    syncToAPI("/tasks", "POST", newTask);
     return newTask;
   },
 
   updateTask: async (id, updates) => {
-    const currentTask = get().tasks.find((t) => t.id === id);
-    if (!currentTask) return;
-    
-    const startDate = updates.startDate ?? currentTask.startDate;
-    const dueDate = updates.dueDate ?? currentTask.dueDate;
-    if (updates.startDate || updates.dueDate) {
-      updates.duration = calculateDuration(startDate, dueDate);
-    }
-    
-    const res = await fetch(`${BASE}/tasks/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates),
+    const tasks = get().tasks.map((t) => {
+      if (t.id !== id) return t;
+      const startDate = updates.startDate ?? t.startDate;
+      const dueDate = updates.dueDate ?? t.dueDate;
+      const duration = updates.startDate || updates.dueDate ? calculateDuration(startDate, dueDate) : t.duration;
+      return { ...t, ...updates, duration, updatedAt: new Date().toISOString() };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks });
     get().applyFilters();
+    syncToAPI(`/tasks/${id}`, "PATCH", updates);
   },
 
   deleteTask: async (id) => {
-    const res = await fetch(`${BASE}/tasks/${id}`, { method: "DELETE" });
-    const tasks = await res.json();
+    const tasks = get().tasks.filter((t) => t.id !== id);
+    writeTasks(tasks);
     set({ tasks });
     get().applyFilters();
+    syncToAPI(`/tasks/${id}`, "DELETE");
   },
 
   toggleComplete: async (id) => {
-    const task = get().tasks.find((t) => t.id === id);
-    if (!task) return;
-    const isCompleted = task.status === "completed";
-    await get().updateTask(id, {
-      status: isCompleted ? "pending" : "completed",
-      completedAt: isCompleted ? null : new Date().toISOString(),
-      progress: isCompleted ? 0 : 100,
+    const tasks = get().tasks.map((t) => {
+      if (t.id !== id) return t;
+      const isCompleted = t.status === "completed";
+      return {
+        ...t,
+        status: isCompleted ? "pending" as TaskStatus : "completed" as TaskStatus,
+        completedAt: isCompleted ? null : new Date().toISOString(),
+        progress: isCompleted ? 0 : 100,
+        updatedAt: new Date().toISOString(),
+      };
     });
+    writeTasks(tasks);
+    set({ tasks });
+    get().applyFilters();
+    const task = tasks.find((t) => t.id === id);
+    if (task) syncToAPI(`/tasks/${id}`, "PATCH", { status: task.status, completedAt: task.completedAt, progress: task.progress });
   },
 
   toggleFavorite: async (id) => {
-    const task = get().tasks.find((t) => t.id === id);
-    if (!task) return;
-    await get().updateTask(id, { favorite: !task.favorite });
+    const tasks = get().tasks.map((t) => {
+      if (t.id !== id) return t;
+      return { ...t, favorite: !t.favorite, updatedAt: new Date().toISOString() };
+    });
+    writeTasks(tasks);
+    set({ tasks });
+    get().applyFilters();
+    const task = tasks.find((t) => t.id === id);
+    if (task) syncToAPI(`/tasks/${id}`, "PATCH", { favorite: task.favorite });
   },
 
   archiveTask: async (id) => {
-    await get().updateTask(id, { status: "archived", archived: true });
+    const tasks = get().tasks.map((t) => {
+      if (t.id !== id) return t;
+      return { ...t, status: "archived" as TaskStatus, archived: true, updatedAt: new Date().toISOString() };
+    });
+    writeTasks(tasks);
+    set({ tasks });
+    get().applyFilters();
+    syncToAPI(`/tasks/${id}`, "PATCH", { status: "archived", archived: true });
   },
 
   restoreTask: async (id) => {
-    const res = await fetch(`${BASE}/tasks/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ archived: false, status: "pending" }),
+    const tasks = get().tasks.map((t) => {
+      if (t.id !== id) return t;
+      return { ...t, archived: false, status: "pending" as TaskStatus, updatedAt: new Date().toISOString() };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks });
     get().applyFilters();
+    syncToAPI(`/tasks/${id}`, "PATCH", { archived: false, status: "pending" });
   },
 
   setViewType: (view) => set({ viewType: view }),
@@ -189,79 +228,81 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   bulkComplete: async () => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks, updates: { status: "completed", completedAt: new Date().toISOString(), progress: 100 } }),
+    const now = new Date().toISOString();
+    const tasks = get().tasks.map((t) => {
+      if (!selectedTasks.includes(t.id)) return t;
+      return { ...t, status: "completed" as TaskStatus, completedAt: now, progress: 100, updatedAt: now };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "PATCH", { ids: selectedTasks, updates: { status: "completed", completedAt: now, progress: 100 } });
   },
 
   bulkDelete: async () => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks }),
-    });
-    const tasks = await res.json();
+    const tasks = get().tasks.filter((t) => !selectedTasks.includes(t.id));
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "DELETE", { ids: selectedTasks });
   },
 
   bulkArchive: async () => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks, updates: { status: "archived", archived: true } }),
+    const now = new Date().toISOString();
+    const tasks = get().tasks.map((t) => {
+      if (!selectedTasks.includes(t.id)) return t;
+      return { ...t, status: "archived" as TaskStatus, archived: true, updatedAt: now };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "PATCH", { ids: selectedTasks, updates: { status: "archived", archived: true } });
   },
 
   bulkChangePriority: async (priority) => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks, updates: { priority } }),
+    const now = new Date().toISOString();
+    const tasks = get().tasks.map((t) => {
+      if (!selectedTasks.includes(t.id)) return t;
+      return { ...t, priority, updatedAt: now };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "PATCH", { ids: selectedTasks, updates: { priority } });
   },
 
   bulkMoveToFolder: async (folderId) => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks, updates: { folderId } }),
+    const now = new Date().toISOString();
+    const tasks = get().tasks.map((t) => {
+      if (!selectedTasks.includes(t.id)) return t;
+      return { ...t, folderId, updatedAt: now };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "PATCH", { ids: selectedTasks, updates: { folderId } });
   },
 
   bulkMoveToProject: async (projectId) => {
     const { selectedTasks } = get();
     if (selectedTasks.length === 0) return;
-    const res = await fetch(`${BASE}/tasks/bulk`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: selectedTasks, updates: { projectId } }),
+    const now = new Date().toISOString();
+    const tasks = get().tasks.map((t) => {
+      if (!selectedTasks.includes(t.id)) return t;
+      return { ...t, projectId, updatedAt: now };
     });
-    const tasks = await res.json();
+    writeTasks(tasks);
     set({ tasks, selectedTasks: [] });
     get().applyFilters();
+    syncToAPI("/tasks/bulk", "PATCH", { ids: selectedTasks, updates: { projectId } });
   },
 
   applyFilters: () => {

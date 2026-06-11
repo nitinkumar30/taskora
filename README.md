@@ -279,7 +279,7 @@ We welcome all contributions — from typo fixes to full feature implementations
 
 **Nitin Kumar** — *The Mastermind, The Visionary, The One Who Wrote the Prompt*
 
-- GitHub: [@nitinkumar30](https://github.com/nitinkumar30)
+- LinkedIn: [@nitin30kumar](https://www.linkedin.com/in/nitin30kumar/)
 - Project: **Taskora** — Premium Task Management
 
 ---
@@ -309,6 +309,6 @@ For full details on the AI generation process, prompt used, and architectural de
 <br>
 
 [![Star](https://img.shields.io/badge/⭐%20Star%20this%20repo-Please%3F-yellow?style=for-the-badge)](https://github.com/nitinkumar30/taskora)
-[![Follow](https://img.shields.io/badge/Follow%20%40nitinkumar-1DA1F2?style=for-the-badge&logo=github)](https://github.com/nitinkumar)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-%40nitin30kumar-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/nitin30kumar/)
 
 </div>

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Project } from "@/types";
 import { generateId } from "@/lib/utils";
+import { readProjects, writeProjects } from "@/utils/local-storage";
 
 interface ProjectState {
   projects: Project[];
@@ -13,14 +14,35 @@ interface ProjectState {
 
 const BASE = "/api";
 
-export const useProjectStore = create<ProjectState>((set) => ({
-  projects: [],
+async function syncToAPI(endpoint: string, method: string, body?: any): Promise<void> {
+  try {
+    await fetch(`${BASE}${endpoint}`, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {}
+}
+
+export const useProjectStore = create<ProjectState>((set, get) => ({
+  projects: readProjects(),
 
   loadProjects: async () => {
+    const local = readProjects();
+    if (local.length > 0) {
+      set({ projects: local });
+    }
     try {
       const res = await fetch(`${BASE}/projects`);
-      const projects = await res.json();
-      set({ projects });
+      const server = await res.json();
+      if (server.length > 0) {
+        writeProjects(server);
+        set({ projects: server });
+      } else if (local.length > 0) {
+        for (const p of local) {
+          syncToAPI("/projects", "POST", p);
+        }
+      }
     } catch {}
   },
 
@@ -41,39 +63,35 @@ export const useProjectStore = create<ProjectState>((set) => ({
       archived: false,
       taskCount: 0,
     };
-    const res = await fetch(`${BASE}/projects`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newProject),
-    });
-    const projects = await res.json();
+    const projects = [...get().projects, newProject];
+    writeProjects(projects);
     set({ projects });
+    syncToAPI("/projects", "POST", newProject);
     return newProject;
   },
 
   updateProject: async (id, updates) => {
-    const res = await fetch(`${BASE}/projects/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates),
-    });
-    const projects = await res.json();
+    const projects = get().projects.map((p) =>
+      p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p
+    );
+    writeProjects(projects);
     set({ projects });
+    syncToAPI(`/projects/${id}`, "PATCH", updates);
   },
 
   deleteProject: async (id) => {
-    const res = await fetch(`${BASE}/projects/${id}`, { method: "DELETE" });
-    const projects = await res.json();
+    const projects = get().projects.filter((p) => p.id !== id);
+    writeProjects(projects);
     set({ projects });
+    syncToAPI(`/projects/${id}`, "DELETE");
   },
 
   archiveProject: async (id) => {
-    const res = await fetch(`${BASE}/projects/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ archived: true }),
-    });
-    const projects = await res.json();
+    const projects = get().projects.map((p) =>
+      p.id === id ? { ...p, archived: true, updatedAt: new Date().toISOString() } : p
+    );
+    writeProjects(projects);
     set({ projects });
+    syncToAPI(`/projects/${id}`, "PATCH", { archived: true });
   },
 }));

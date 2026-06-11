@@ -18,7 +18,7 @@ export const baseMetadata: Metadata = {
     "analytics",
     "next.js",
   ],
-  authors: [{ name: "Nitin Kumar" }],
+  authors: [{ name: "Nitin Kumar", url: "https://www.linkedin.com/in/nitin30kumar/" }],
   creator: "Nitin Kumar",
   icons: {
     icon: "/favicon.svg",
