@@ -127,3 +127,20 @@ export function getDaysBetween(start: string, end: string): number {
   const e = new Date(end);
   return Math.ceil((e.getTime() - s.getTime()) / 86400000);
 }
+
+export function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
+}
+
+export function getUserName(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem("taskora-user-name") || "";
+}
+
+export function setUserName(name: string): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("taskora-user-name", name);
+}

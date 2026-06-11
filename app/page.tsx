@@ -14,7 +14,7 @@ import { useUIStore } from "@/store/ui-store";
 import { useConfetti } from "@/components/confetti";
 import { Confetti } from "@/components/confetti";
 import { Plus, List, Kanban, CalendarDays } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getGreeting, getUserName } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
@@ -24,6 +24,18 @@ export default function DashboardPage() {
   const { addToast } = useUIStore();
   const { particles, fire } = useConfetti();
   const [taskModalOpen, setTaskModalOpen] = React.useState(false);
+  const [userName, setUserName] = React.useState(getUserName());
+  const greeting = getGreeting();
+
+  React.useEffect(() => {
+    const checkName = () => setUserName(getUserName());
+    window.addEventListener("storage", checkName);
+    window.addEventListener("user-name-changed", checkName);
+    return () => {
+      window.removeEventListener("storage", checkName);
+      window.removeEventListener("user-name-changed", checkName);
+    };
+  }, []);
 
   const stats = {
     total: tasks.length,
@@ -54,7 +66,7 @@ export default function DashboardPage() {
       
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Good day! 👋</h2>
+          <h2 className="text-2xl font-bold">{getGreeting()}{userName ? `, ${userName}` : ""}! 👋</h2>
           <p className="text-sm text-muted-foreground">Here&apos;s your task overview</p>
         </div>
         <Button onClick={() => setTaskModalOpen(true)}>

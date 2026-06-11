@@ -52,7 +52,7 @@ export function ProjectPageView() {
           {project.description && <p className="text-sm text-muted-foreground">{project.description}</p>}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => router.push(`/projects/${project.id}/analytics`)}>
+          <Button variant="ghost" size="sm" onClick={() => router.push('/analytics')}>
             <BarChart3 className="h-4 w-4 mr-1" /> Analytics
           </Button>
           <Button variant="ghost" size="sm" onClick={() => setEditModalOpen(true)}>
